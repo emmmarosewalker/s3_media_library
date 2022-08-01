@@ -82,3 +82,18 @@ func (f *fileRepositoryImp) PutFile(ctx context.Context, name string) (*string, 
 
 	return &url, nil
 }
+
+func (f *fileRepositoryImp) DeleteFile(ctx context.Context, path string) error {
+	s3Input := s3.DeleteObjectInput{
+		Bucket: aws.String("emmy-codes-media-library"),
+		Key:    aws.String(path),
+	}
+
+	_, err := f.s3Conn.DeleteObjectWithContext(ctx, &s3Input)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

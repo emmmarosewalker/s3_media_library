@@ -58,3 +58,15 @@ functions:
         Action:
           - s3:*        
         Resource: "arn:aws:s3:::emmy-codes-media-library/*"
+
+  DeleteFile:
+    handler: lambdas/delete_file/main.go
+    events:
+      - http:
+          path: delete-file
+          method: put
+    iamRoleStatements:
+      - Effect: "Allow"        
+        Action:
+          - s3:*        
+        Resource: "arn:aws:s3:::emmy-codes-media-library/*"

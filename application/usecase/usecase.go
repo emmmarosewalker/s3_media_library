@@ -39,3 +39,13 @@ func (u *FileUsecase) Put(ctx context.Context, name string) (*[]byte, error) {
 
 	return &json, nil
 }
+
+func (u *FileUsecase) Delete(ctx context.Context, path string) error {
+	err := u.File.DeleteFile(ctx, path)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
