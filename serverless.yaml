@@ -1,0 +1,60 @@
+# serverless.yml
+ 
+service: emmy-codes-media
+ 
+provider:
+  name: aws
+  stage: ${opt:stage, "staging"}
+  region: ap-southeast-2
+  runtime: go1.x
+  environment: ${file(variables.yml)}
+
+# custom:
+#   customDomain:
+#     domainName: ${self:provider.environment.DOMAIN_NAME}
+#     basePath: ''
+#     stage: ${opt:stage}
+#     certificateArn: ${self:provider.environment.CERT_ARN}
+#     createRoute53Record: true
+#     autoDomain: true
+#     autoDomainWaitFor: 120
+#     hostedZoneId: ${self:provider.environment.ZONE_ID}
+ 
+package:
+  individually: true
+
+
+plugins:
+  - serverless-prune-plugin
+  - serverless-go-plugin
+  - serverless-iam-roles-per-function
+  # - serverless-domain-manager
+
+
+ 
+functions:
+  GetFiles:
+    handler: lambdas/get_files/main.go
+    events:
+      - http:
+          path: get-files
+          method: get
+    iamRoleStatements:
+      - Effect: "Allow"        
+        Action:
+          - s3:*        
+        Resource: 
+          - "arn:aws:s3:::emmy-codes-media-library/*"
+          - "arn:aws:s3:::emmy-codes-media-library"
+
+  PutFile:
+    handler: lambdas/put_file/main.go
+    events:
+      - http:
+          path: put-file
+          method: get
+    iamRoleStatements:
+      - Effect: "Allow"        
+        Action:
+          - s3:*        
+        Resource: "arn:aws:s3:::emmy-codes-media-library/*"
